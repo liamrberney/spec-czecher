@@ -5,6 +5,11 @@
  */
 package com.berneytech.spec.czecher;
 
+import com.profesorfalken.jsensors.*;
+import com.profesorfalken.jsensors.model.components.Components;
+import com.profesorfalken.jsensors.model.components.Cpu;
+import com.profesorfalken.jsensors.model.sensors.Fan;
+import com.profesorfalken.jsensors.model.sensors.Temperature;
 import java.util.Arrays;
 import java.util.List;
 import org.slf4j.Logger;
@@ -83,7 +88,7 @@ public class specCzecherRunner {
      */
     public static void main(String[] args) {
         // Options: ERROR > WARN > INFO > DEBUG > TRACE
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+       /* System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
         System.setProperty(org.slf4j.impl.SimpleLogger.LOG_FILE_KEY, "System.err");
         Logger LOG = LoggerFactory.getLogger(specCzecherRunner.class);
 
@@ -134,7 +139,50 @@ public class specCzecherRunner {
 
         // hardware: USB devices
         LOG.info("Checking USB Devices...");
-        printUsbDevices(hal.getUsbDevices(true));
+        printUsbDevices(hal.getUsbDevices(true));*/
+        Components components = JSensors.get.components();
+
+    List<Cpu> cpus = components.cpus;
+    if (cpus != null) {
+        for (final Cpu cpu : cpus) {
+            System.out.println("Found CPU component: " + cpu.name);
+            if (cpu.sensors != null) {
+              System.out.println("Sensors: ");
+  
+              //Print temperatures
+              List<Temperature> temps = cpu.sensors.temperatures;
+              for (final Temperature temp : temps) {
+                  System.out.println(temp.name + ": " + temp.value + " C");
+              }
+  
+              //Print fan speed
+              List<Fan> fans = cpu.sensors.fans;
+              for (final Fan fan : fans) {
+                  System.out.println(fan.name + ": " + fan.value + " RPM");
+              }
+            }
+        }
+    }
+    if (cpus != null) {
+        for (final Cpu cpu : cpus) {
+            System.out.println("Found CPU component: " + cpu.name);
+            if (cpu.sensors != null) {
+              System.out.println("Sensors: ");
+  
+              //Print temperatures
+              List<Temperature> temps = cpu.sensors.temperatures;
+              for (final Temperature temp : temps) {
+                  System.out.println(temp.name + ": " + temp.value + " C");
+              }
+  
+              //Print fan speed
+              List<Fan> fans = cpu.sensors.fans;
+              for (final Fan fan : fans) {
+                  System.out.println(fan.name + ": " + fan.value + " RPM");
+              }
+            }
+        }
+    }
 
     }
 
