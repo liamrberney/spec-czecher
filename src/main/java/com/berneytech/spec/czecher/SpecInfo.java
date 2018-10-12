@@ -4,43 +4,17 @@
  * and open the template in the editor.
  */
 package com.berneytech.spec.czecher;
-/**
- * Oshi (https://github.com/oshi/oshi)
- *
- * Copyright (c) 2010 - 2018 The Oshi Project Team
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Maintainers:
- * dblock[at]dblock[dot]org
- * widdis[at]gmail[dot]com
- * enrico.bianchi[at]gmail[dot]com
- *
- * Contributors:
- * https://github.com/oshi/oshi/graphs/contributors
- */
-
 
 import java.util.Arrays;
 import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import oshi.SystemInfo;
-
 import oshi.hardware.Baseboard;
 import oshi.hardware.CentralProcessor;
-import oshi.hardware.CentralProcessor.TickType;
 import oshi.hardware.ComputerSystem;
 import oshi.hardware.Display;
 import oshi.hardware.Firmware;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HWDiskStore;
 import oshi.hardware.HWPartition;
-import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.NetworkIF;
 import oshi.hardware.PowerSource;
 import oshi.hardware.Sensors;
@@ -50,88 +24,10 @@ import oshi.software.os.NetworkParams;
 import oshi.software.os.OSFileStore;
 import oshi.software.os.OSProcess;
 import oshi.software.os.OperatingSystem;
-import oshi.software.os.OperatingSystem.ProcessSort;
 import oshi.util.FormatUtil;
 import oshi.util.Util;
 
-/**
- * The Class SystemInfoTest.
- *
- * @author dblock[at]dblock[dot]org
- */
-public class SystemInfoTest {
-
-    /**
-     * Test system info.
-     */
-    //@Test
-    //public void testCentralProcessor() {
-    //    assertFalse(PlatformEnum.UNKNOWN.equals(SystemInfo.getCurrentPlatformEnum()));
-    //}
-
-    /**
-     * The main method, demonstrating use of classes.
-     *
-     * @param args
-     *            the arguments
-     */
-    public static void main(String[] args) {
-        // Options: ERROR > WARN > INFO > DEBUG > TRACE
-        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
-        System.setProperty(org.slf4j.impl.SimpleLogger.LOG_FILE_KEY, "System.err");
-        Logger LOG = LoggerFactory.getLogger(SystemInfoTest1.class);
-
-        LOG.info("Initializing System...");
-        SystemInfo si = new SystemInfo();
-
-        HardwareAbstractionLayer hal = si.getHardware();
-        OperatingSystem os = si.getOperatingSystem();
-
-        System.out.println(os);
-
-        LOG.info("Checking computer system...");
-        printComputerSystem(hal.getComputerSystem());
-
-        LOG.info("Checking Processor...");
-        printProcessor(hal.getProcessor());
-
-        LOG.info("Checking Memory...");
-        printMemory(hal.getMemory());
-
-        LOG.info("Checking CPU...");
-        printCpu(hal.getProcessor());
-
-        LOG.info("Checking Processes...");
-        printProcesses(os, hal.getMemory());
-
-        LOG.info("Checking Sensors...");
-        printSensors(hal.getSensors());
-
-        LOG.info("Checking Power sources...");
-        printPowerSources(hal.getPowerSources());
-
-        LOG.info("Checking Disks...");
-        printDisks(hal.getDiskStores());
-
-        LOG.info("Checking File System...");
-        printFileSystem(os.getFileSystem());
-
-        LOG.info("Checking Network interfaces...");
-        printNetworkInterfaces(hal.getNetworkIFs());
-
-        LOG.info("Checking Network parameterss...");
-        printNetworkParameters(os.getNetworkParams());
-
-        // hardware: displays
-        LOG.info("Checking Displays...");
-        printDisplays(hal.getDisplays());
-
-        // hardware: USB devices
-        LOG.info("Checking USB Devices...");
-        printUsbDevices(hal.getUsbDevices(true));
-
-    }
-
+public class SpecInfo {
     private static void printComputerSystem(final ComputerSystem computerSystem) {
 
         System.out.println("manufacturer: " + computerSystem.getManufacturer());
@@ -180,14 +76,14 @@ public class SystemInfoTest {
         Util.sleep(1000);
         long[] ticks = processor.getSystemCpuLoadTicks();
         System.out.println("CPU, IOWait, and IRQ ticks @ 1 sec:" + Arrays.toString(ticks));
-        long user = ticks[TickType.USER.getIndex()] - prevTicks[TickType.USER.getIndex()];
-        long nice = ticks[TickType.NICE.getIndex()] - prevTicks[TickType.NICE.getIndex()];
-        long sys = ticks[TickType.SYSTEM.getIndex()] - prevTicks[TickType.SYSTEM.getIndex()];
-        long idle = ticks[TickType.IDLE.getIndex()] - prevTicks[TickType.IDLE.getIndex()];
-        long iowait = ticks[TickType.IOWAIT.getIndex()] - prevTicks[TickType.IOWAIT.getIndex()];
-        long irq = ticks[TickType.IRQ.getIndex()] - prevTicks[TickType.IRQ.getIndex()];
-        long softirq = ticks[TickType.SOFTIRQ.getIndex()] - prevTicks[TickType.SOFTIRQ.getIndex()];
-        long steal = ticks[TickType.STEAL.getIndex()] - prevTicks[TickType.STEAL.getIndex()];
+        long user = ticks[CentralProcessor.TickType.USER.getIndex()] - prevTicks[CentralProcessor.TickType.USER.getIndex()];
+        long nice = ticks[CentralProcessor.TickType.NICE.getIndex()] - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
+        long sys = ticks[CentralProcessor.TickType.SYSTEM.getIndex()] - prevTicks[CentralProcessor.TickType.SYSTEM.getIndex()];
+        long idle = ticks[CentralProcessor.TickType.IDLE.getIndex()] - prevTicks[CentralProcessor.TickType.IDLE.getIndex()];
+        long iowait = ticks[CentralProcessor.TickType.IOWAIT.getIndex()] - prevTicks[CentralProcessor.TickType.IOWAIT.getIndex()];
+        long irq = ticks[CentralProcessor.TickType.IRQ.getIndex()] - prevTicks[CentralProcessor.TickType.IRQ.getIndex()];
+        long softirq = ticks[CentralProcessor.TickType.SOFTIRQ.getIndex()] - prevTicks[CentralProcessor.TickType.SOFTIRQ.getIndex()];
+        long steal = ticks[CentralProcessor.TickType.STEAL.getIndex()] - prevTicks[CentralProcessor.TickType.STEAL.getIndex()];
         long totalCpu = user + nice + sys + idle + iowait + irq + softirq + steal;
 
         System.out.format(
@@ -212,7 +108,7 @@ public class SystemInfoTest {
     private static void printProcesses(OperatingSystem os, GlobalMemory memory) {
         System.out.println("Processes: " + os.getProcessCount() + ", Threads: " + os.getThreadCount());
         // Sort by highest CPU
-        List<OSProcess> procs = Arrays.asList(os.getProcesses(5, ProcessSort.CPU));
+        List<OSProcess> procs = Arrays.asList(os.getProcesses(5, OperatingSystem.ProcessSort.CPU));
 
         System.out.println("   PID  %CPU %MEM       VSZ       RSS Name");
         for (int i = 0; i < procs.size() && i < 5; i++) {
@@ -341,11 +237,6 @@ public class SystemInfoTest {
             System.out.println(usbDevice.toString());
         }
     }
-
-    /*private static void printSoundCards(SoundCard[] cards) {
-        System.out.println("Sound Cards:");
-        for (SoundCard card : cards) {
-            System.out.println(card.toString());
-        }
-    }*/
+   
 }
+
