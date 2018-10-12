@@ -7,6 +7,8 @@ package com.berneytech.spec.czecher;
 
 import java.util.Arrays;
 import java.util.List;
+import org.slf4j.LoggerFactory;
+import oshi.SystemInfo;
 import oshi.hardware.Baseboard;
 import oshi.hardware.CentralProcessor;
 import oshi.hardware.ComputerSystem;
@@ -15,17 +17,14 @@ import oshi.hardware.Firmware;
 import oshi.hardware.GlobalMemory;
 import oshi.hardware.HWDiskStore;
 import oshi.hardware.HWPartition;
+import oshi.hardware.HardwareAbstractionLayer;
 import oshi.hardware.NetworkIF;
-import oshi.hardware.PowerSource;
-import oshi.hardware.Sensors;
 import oshi.hardware.UsbDevice;
 import oshi.software.os.FileSystem;
 import oshi.software.os.NetworkParams;
 import oshi.software.os.OSFileStore;
-import oshi.software.os.OSProcess;
 import oshi.software.os.OperatingSystem;
 import oshi.util.FormatUtil;
-import oshi.util.Util;
 
 public class SpecInfo {
     private static void printComputerSystem(final ComputerSystem computerSystem) {
@@ -55,97 +54,17 @@ public class SpecInfo {
         System.out.println(" " + processor.getPhysicalProcessorCount() + " physical CPU core(s)");
         System.out.println(" " + processor.getLogicalProcessorCount() + " logical CPU(s)");
 
-        System.out.println("Identifier: " + processor.getIdentifier());
-        System.out.println("ProcessorID: " + processor.getProcessorID());
     }
 
     private static void printMemory(GlobalMemory memory) {
         System.out.println("Memory: " + FormatUtil.formatBytes(memory.getAvailable()) + "/"
                 + FormatUtil.formatBytes(memory.getTotal()));
-        System.out.println("Swap used: " + FormatUtil.formatBytes(memory.getSwapUsed()) + "/"
-                + FormatUtil.formatBytes(memory.getSwapTotal()));
     }
 
     private static void printCpu(CentralProcessor processor) {
-        System.out.println("Uptime: " + FormatUtil.formatElapsedSecs(processor.getSystemUptime()));
-        System.out.println(
-                "Context Switches/Interrupts: " + processor.getContextSwitches() + " / " + processor.getInterrupts());
-        long[] prevTicks = processor.getSystemCpuLoadTicks();
-        System.out.println("CPU, IOWait, and IRQ ticks @ 0 sec:" + Arrays.toString(prevTicks));
-        // Wait a second...
-        Util.sleep(1000);
-        long[] ticks = processor.getSystemCpuLoadTicks();
-        System.out.println("CPU, IOWait, and IRQ ticks @ 1 sec:" + Arrays.toString(ticks));
-        long user = ticks[CentralProcessor.TickType.USER.getIndex()] - prevTicks[CentralProcessor.TickType.USER.getIndex()];
-        long nice = ticks[CentralProcessor.TickType.NICE.getIndex()] - prevTicks[CentralProcessor.TickType.NICE.getIndex()];
-        long sys = ticks[CentralProcessor.TickType.SYSTEM.getIndex()] - prevTicks[CentralProcessor.TickType.SYSTEM.getIndex()];
-        long idle = ticks[CentralProcessor.TickType.IDLE.getIndex()] - prevTicks[CentralProcessor.TickType.IDLE.getIndex()];
-        long iowait = ticks[CentralProcessor.TickType.IOWAIT.getIndex()] - prevTicks[CentralProcessor.TickType.IOWAIT.getIndex()];
-        long irq = ticks[CentralProcessor.TickType.IRQ.getIndex()] - prevTicks[CentralProcessor.TickType.IRQ.getIndex()];
-        long softirq = ticks[CentralProcessor.TickType.SOFTIRQ.getIndex()] - prevTicks[CentralProcessor.TickType.SOFTIRQ.getIndex()];
-        long steal = ticks[CentralProcessor.TickType.STEAL.getIndex()] - prevTicks[CentralProcessor.TickType.STEAL.getIndex()];
-        long totalCpu = user + nice + sys + idle + iowait + irq + softirq + steal;
-
-        System.out.format(
-                "User: %.1f%% Nice: %.1f%% System: %.1f%% Idle: %.1f%% IOwait: %.1f%% IRQ: %.1f%% SoftIRQ: %.1f%% Steal: %.1f%%%n",
-                100d * user / totalCpu, 100d * nice / totalCpu, 100d * sys / totalCpu, 100d * idle / totalCpu,
-                100d * iowait / totalCpu, 100d * irq / totalCpu, 100d * softirq / totalCpu, 100d * steal / totalCpu);
+       
         System.out.format("CPU load: %.1f%% (counting ticks)%n", processor.getSystemCpuLoadBetweenTicks() * 100);
         System.out.format("CPU load: %.1f%% (OS MXBean)%n", processor.getSystemCpuLoad() * 100);
-        double[] loadAverage = processor.getSystemLoadAverage(3);
-        System.out.println("CPU load averages:" + (loadAverage[0] < 0 ? " N/A" : String.format(" %.2f", loadAverage[0]))
-                + (loadAverage[1] < 0 ? " N/A" : String.format(" %.2f", loadAverage[1]))
-                + (loadAverage[2] < 0 ? " N/A" : String.format(" %.2f", loadAverage[2])));
-        // per core CPU
-        StringBuilder procCpu = new StringBuilder("CPU load per processor:");
-        double[] load = processor.getProcessorCpuLoadBetweenTicks();
-        for (double avg : load) {
-            procCpu.append(String.format(" %.1f%%", avg * 100));
-        }
-        System.out.println(procCpu.toString());
-    }
-
-    private static void printProcesses(OperatingSystem os, GlobalMemory memory) {
-        System.out.println("Processes: " + os.getProcessCount() + ", Threads: " + os.getThreadCount());
-        // Sort by highest CPU
-        List<OSProcess> procs = Arrays.asList(os.getProcesses(5, OperatingSystem.ProcessSort.CPU));
-
-        System.out.println("   PID  %CPU %MEM       VSZ       RSS Name");
-        for (int i = 0; i < procs.size() && i < 5; i++) {
-            OSProcess p = procs.get(i);
-            System.out.format(" %5d %5.1f %4.1f %9s %9s %s%n", p.getProcessID(),
-                    100d * (p.getKernelTime() + p.getUserTime()) / p.getUpTime(),
-                    100d * p.getResidentSetSize() / memory.getTotal(), FormatUtil.formatBytes(p.getVirtualSize()),
-                    FormatUtil.formatBytes(p.getResidentSetSize()), p.getName());
-        }
-    }
-
-    private static void printSensors(Sensors sensors) {
-        System.out.println("Sensors:");
-        System.out.format(" CPU Temperature: %.1f°C%n", sensors.getCpuTemperature());
-        System.out.println(" Fan Speeds: " + Arrays.toString(sensors.getFanSpeeds()));
-        System.out.format(" CPU Voltage: %.1fV%n", sensors.getCpuVoltage());
-    }
-
-    private static void printPowerSources(PowerSource[] powerSources) {
-        StringBuilder sb = new StringBuilder("Power: ");
-        if (powerSources.length == 0) {
-            sb.append("Unknown");
-        } else {
-            double timeRemaining = powerSources[0].getTimeRemaining();
-            if (timeRemaining < -1d) {
-                sb.append("Charging");
-            } else if (timeRemaining < 0d) {
-                sb.append("Calculating time remaining");
-            } else {
-                sb.append(String.format("%d:%02d remaining", (int) (timeRemaining / 3600),
-                        (int) (timeRemaining / 60) % 60));
-            }
-        }
-        for (PowerSource pSource : powerSources) {
-            sb.append(String.format("%n %s @ %.1f%%", pSource.getName(), pSource.getRemainingCapacity() * 100d));
-        }
-        System.out.println(sb.toString());
     }
 
     private static void printDisks(HWDiskStore[] diskStores) {
@@ -236,6 +155,52 @@ public class SpecInfo {
         for (UsbDevice usbDevice : usbDevices) {
             System.out.println(usbDevice.toString());
         }
+    }
+
+    public static void run() {
+        System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "INFO");
+        System.setProperty(org.slf4j.impl.SimpleLogger.LOG_FILE_KEY, "System.err");
+        org.slf4j.Logger LOG = LoggerFactory.getLogger(SpecInfo.class);
+
+        LOG.info("Initializing System...");
+        SystemInfo si = new SystemInfo();
+
+        HardwareAbstractionLayer hal = si.getHardware();
+        OperatingSystem os = si.getOperatingSystem();
+
+        System.out.println(os);
+
+        LOG.info("Checking computer system...");
+        printComputerSystem(hal.getComputerSystem());
+
+        LOG.info("Checking Processor...");
+        printProcessor(hal.getProcessor());
+
+        LOG.info("Checking Memory...");
+        printMemory(hal.getMemory());
+
+        LOG.info("Checking CPU...");
+        printCpu(hal.getProcessor());
+
+        LOG.info("Checking Disks...");
+        printDisks(hal.getDiskStores());
+
+        LOG.info("Checking File System...");
+        printFileSystem(os.getFileSystem());
+
+        LOG.info("Checking Network interfaces...");
+        printNetworkInterfaces(hal.getNetworkIFs());
+
+        LOG.info("Checking Network parameterss...");
+        printNetworkParameters(os.getNetworkParams());
+
+        // hardware: displays
+        LOG.info("Checking Displays...");
+        printDisplays(hal.getDisplays());
+
+        // hardware: USB devices
+        LOG.info("Checking USB Devices...");
+        printUsbDevices(hal.getUsbDevices(true));
     }
    
 }
