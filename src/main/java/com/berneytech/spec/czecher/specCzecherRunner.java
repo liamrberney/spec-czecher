@@ -55,7 +55,7 @@ public class specCzecherRunner {
     //public void testCentralProcessor() {
     //    assertFalse(PlatformEnum.UNKNOWN.equals(SystemInfo.getCurrentPlatformEnum()));
     //}
-
+                                
     /**
      * The main method, demonstrating use of classes.
      *
@@ -67,11 +67,12 @@ public class specCzecherRunner {
     public static void main(String[] args) throws IOException, InvalidFormatException {
         SpecInfo a=new SpecInfo();
         List<List<String>> specs = SpecInfo.run();
-        for(List s: specs) {
-            for ( Object str: s){
+        for(List s : specs) {
+            for ( Object str : s){
                 out.println((String) str);
             }
-            
+        ExcelWriter b= new ExcelWriter(specs);
+        b.createSheet();
             
 }
        

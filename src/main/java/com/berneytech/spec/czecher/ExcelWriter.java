@@ -17,56 +17,14 @@ import java.util.List;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import java.io.IOException;
 import java.util.Date;
-class Employee {
-    private String name;
-    private String email;
-    private Date dateOfBirth;
-    private double salary;
-
-    public Employee(String name, String email, Date dateOfBirth, double salary) {
-        this.name = name;
-        this.email = email;
-        this.dateOfBirth = dateOfBirth;
-        this.salary = salary;
-    }
-    public double getSalary(){
-        return salary;
-    }
-    public Date getDateOfBirth(){
-        return dateOfBirth;
-    }
-    public String getEmail(){
-        return email;
-    }
-    public String getName(){
-        return name;
-    }
-}
-
 
 public class ExcelWriter {
     
-    public ExcelWriter(){
-        
-    }
-
-    private static String[] columns = {"Name", "Email", "Date Of Birth", "Salary"};
-    private static List<Employee> employees =  new ArrayList<>();
-
-	// Initializing employees data to insert into the excel file
-    static {
-        Calendar dateOfBirth = Calendar.getInstance();
-        dateOfBirth.set(1992, 7, 21);
-        employees.add(new Employee("Rajeev Singh", "rajeev@example.com", 
-                dateOfBirth.getTime(), 1200000.0));
-
-        dateOfBirth.set(1965, 10, 15);
-        employees.add(new Employee("Thomas cook", "thomas@example.com", 
-                dateOfBirth.getTime(), 1500000.0));
-
-        dateOfBirth.set(1987, 4, 18);
-        employees.add(new Employee("Steve Maiden", "steve@example.com", 
-                dateOfBirth.getTime(), 1800000.0));
+    public List<List<String>> info;
+    private String[] Headers;
+    public ExcelWriter(List<List<String>> info){
+        this.info=info;
+        Headers= new String[info.size()];
     }
 
     public void createSheet() throws IOException, InvalidFormatException {
@@ -78,14 +36,11 @@ public class ExcelWriter {
         CreationHelper createHelper = workbook.getCreationHelper();
 
         // Create a Sheet
-        Sheet sheet = workbook.createSheet("Employee");
+        Sheet sheet = workbook.createSheet("Spec-Czecher");
 
         // Create a Font for styling header cells
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 14);
-        headerFont.setColor(IndexedColors.RED.getIndex());
-
         // Create a CellStyle with the font
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
@@ -94,42 +49,29 @@ public class ExcelWriter {
         Row headerRow = sheet.createRow(0);
 
         // Create cells
-        for(int i = 0; i < columns.length; i++) {
+        
+        for(int i = 0; i < Headers.length; i++) {
             Cell cell = headerRow.createCell(i);
-            cell.setCellValue(columns[i]);
+            cell.setCellValue(Headers[i]);
             cell.setCellStyle(headerCellStyle);
         }
 
-        // Create Cell Style for formatting Date
-        CellStyle dateCellStyle = workbook.createCellStyle();
-        dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat("dd-MM-yyyy"));
-
         // Create Other rows and cells with employees data
-        int rowNum = 1;
-        for(Employee employee: employees) {
+        int rowNum = 0;
+        for(List<String> s: info) {
             Row row = sheet.createRow(rowNum++);
-
-            row.createCell(0)
-                    .setCellValue(employee.getName());
-
-            row.createCell(1)
-                    .setCellValue(employee.getEmail());
-
-            Cell dateOfBirthCell = row.createCell(2);
-            dateOfBirthCell.setCellValue(employee.getDateOfBirth());
-            dateOfBirthCell.setCellStyle(dateCellStyle);
-
-            row.createCell(3)
-                    .setCellValue(employee.getSalary());
+            row.createCell(0).setCellValue(Headers[rowNum]);
+                for (int x=0; x<s.size(); x++)
+                    row.createCell(x).setCellValue(s.get(x));
         }
 
 		// Resize all columns to fit the content size
-        for(int i = 0; i < columns.length; i++) {
+        for(int i = 0; i < Headers.length; i++) {
             sheet.autoSizeColumn(i);
         }
 
         // Write the output to a file
-        FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
+        FileOutputStream fileOut = new FileOutputStream("hopefullythisworks?.xlsx");
         workbook.write(fileOut);
         fileOut.close();
 
