@@ -57,10 +57,9 @@ public class ExcelWriter {
         }
 
         // Create Other rows and cells with employees data
-        int rowNum = 0;
+        int rowNum = 1;
         for(List<String> s: info) {
             Row row = sheet.createRow(rowNum++);
-            row.createCell(0).setCellValue(Headers[rowNum]);
                 for (int x=0; x<s.size(); x++)
                     row.createCell(x).setCellValue(s.get(x));
         }
@@ -71,7 +70,7 @@ public class ExcelWriter {
         }
 
         // Write the output to a file
-        FileOutputStream fileOut = new FileOutputStream("hopefullythisworks?.xlsx");
+        FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
         workbook.write(fileOut);
         fileOut.close();
 

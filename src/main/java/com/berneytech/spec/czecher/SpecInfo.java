@@ -36,18 +36,18 @@ public class SpecInfo {
         temp.add("serialnumber: " + computerSystem.getSerialNumber());
         final Firmware firmware = computerSystem.getFirmware();
         temp.add("firmware:");
-        temp.add("  manufacturer: " + firmware.getManufacturer());
-        temp.add("  name: " + firmware.getName());
-        temp.add("  description: " + firmware.getDescription());
-        temp.add("  version: " + firmware.getVersion());
-        temp.add("  release date: " + (firmware.getReleaseDate() == null ? "unknown"
+        temp.add("manufacturer: " + firmware.getManufacturer());
+        temp.add("name: " + firmware.getName());
+        temp.add("description: " + firmware.getDescription());
+        temp.add("version: " + firmware.getVersion());
+        temp.add("release date: " + (firmware.getReleaseDate() == null ? "unknown"
                 : firmware.getReleaseDate() == null ? "unknown" : firmware.getReleaseDate()));
         final Baseboard baseboard = computerSystem.getBaseboard();
         temp.add("baseboard:");
-        temp.add("  manufacturer: " + baseboard.getManufacturer());
-        temp.add("  model: " + baseboard.getModel());
-        temp.add("  version: " + baseboard.getVersion());
-        temp.add("  serialnumber: " + baseboard.getSerialNumber());
+        temp.add("manufacturer: " + baseboard.getManufacturer());
+        temp.add("model: " + baseboard.getModel());
+        temp.add("version: " + baseboard.getVersion());
+        temp.add("serialnumber: " + baseboard.getSerialNumber());
         return temp;
     }
 
@@ -93,7 +93,7 @@ public class SpecInfo {
                 continue;
             }
             for (HWPartition part : partitions) {
-                temp.add(String.format(" |-- %s: %s (%s) Maj:Min=%d:%d, size: %s%s%n", part.getIdentification(),
+                temp.add(String.format(" %s: %s (%s) Maj:Min=%d:%d, size: %s%s%n", part.getIdentification(),
                         part.getName(), part.getType(), part.getMajor(), part.getMinor(),
                         FormatUtil.formatBytesDecimal(part.getSize()),
                         part.getMountPoint().isEmpty() ? "" : " @ " + part.getMountPoint()));
@@ -107,7 +107,7 @@ public class SpecInfo {
         List<String> temp= new ArrayList<>();
         temp.add("File System:");
 
-        temp.add(String.format(" File Descriptors: %d/%d%n", fileSystem.getOpenFileDescriptors(),
+        temp.add(String.format("File Descriptors: %d/%d%n", fileSystem.getOpenFileDescriptors(),
                 fileSystem.getMaxFileDescriptors()));
 
         OSFileStore[] fsArray = fileSystem.getFileStores();
@@ -129,11 +129,11 @@ public class SpecInfo {
         List<String> temp= new ArrayList<>();
             temp.add("Network Interfaces:");
         for (NetworkIF net : networkIFs) {
-            temp.add(String.format(" Name: %s (%s)%n", net.getName(), net.getDisplayName()));
-            temp.add(String.format("   MAC Address: %s %n", net.getMacaddr()));
-            temp.add(String.format("   MTU: %s, Speed: %s %n", net.getMTU(), FormatUtil.formatValue(net.getSpeed(), "bps")));
-            temp.add(String.format("   IPv4: %s %n", Arrays.toString(net.getIPv4addr())));
-            temp.add(String.format("   IPv6: %s %n", Arrays.toString(net.getIPv6addr())));
+            temp.add(String.format("Name: %s (%s)%n", net.getName(), net.getDisplayName()));
+            temp.add(String.format("MAC Address: %s %n", net.getMacaddr()));
+            temp.add(String.format("MTU: %s, Speed: %s %n", net.getMTU(), FormatUtil.formatValue(net.getSpeed(), "bps")));
+            temp.add(String.format("IPv4: %s %n", Arrays.toString(net.getIPv4addr())));
+            temp.add(String.format("IPv6: %s %n", Arrays.toString(net.getIPv6addr())));
             boolean hasData = net.getBytesRecv() > 0 || net.getBytesSent() > 0 || net.getPacketsRecv() > 0
                     || net.getPacketsSent() > 0;
             temp.add(String.format("   Traffic: received %s/%s%s; transmitted %s/%s%s %n",
@@ -150,11 +150,11 @@ public class SpecInfo {
     private static List<String> printNetworkParameters(NetworkParams networkParams) {
         List<String> temp= new ArrayList<>();
         temp.add("Network parameters:");
-        temp.add(String.format(" Host name: %s%n", networkParams.getHostName()));
-        temp.add(String.format(" Domain name: %s%n", networkParams.getDomainName()));
-        temp.add(String.format(" DNS servers: %s%n", Arrays.toString(networkParams.getDnsServers())));
-        temp.add(String.format(" IPv4 Gateway: %s%n", networkParams.getIpv4DefaultGateway()));
-        temp.add(String.format(" IPv6 Gateway: %s%n", networkParams.getIpv6DefaultGateway()));
+        temp.add(String.format("Host name: %s%n", networkParams.getHostName()));
+        temp.add(String.format("Domain name: %s%n", networkParams.getDomainName()));
+        temp.add(String.format("DNS servers: %s%n", Arrays.toString(networkParams.getDnsServers())));
+        temp.add(String.format("IPv4 Gateway: %s%n", networkParams.getIpv4DefaultGateway()));
+        temp.add(String.format("IPv6 Gateway: %s%n", networkParams.getIpv6DefaultGateway()));
         return temp;
     }
 
@@ -163,8 +163,10 @@ public class SpecInfo {
         temp.add("Displays:");
         int i = 0;
         for (Display display : displays) {
-            temp.add(" Display " + i + ":");
-            temp.add(display.toString());
+            temp.add("Display " + i + ":");
+            String[] a = display.toString().split(",");
+            for (String b: a)
+                temp.add(b);
             i++;
         }
         return temp;
@@ -217,18 +219,18 @@ public class SpecInfo {
         specs.add(printFileSystem(os.getFileSystem()));
 
         LOG.info("Checking Network interfaces...");
-        printNetworkInterfaces(hal.getNetworkIFs());
+        specs.add(printNetworkInterfaces(hal.getNetworkIFs()));
 
         LOG.info("Checking Network parameterss...");
-        printNetworkParameters(os.getNetworkParams());
+        specs.add(printNetworkParameters(os.getNetworkParams()));
 
         // hardware: displays
         LOG.info("Checking Displays...");
-        printDisplays(hal.getDisplays());
+        specs.add(printDisplays(hal.getDisplays()));
 
         // hardware: USB devices
         LOG.info("Checking USB Devices...");
-        printUsbDevices(hal.getUsbDevices(true));
+        specs.add(printUsbDevices(hal.getUsbDevices(true)));
  
         return specs;
     }
