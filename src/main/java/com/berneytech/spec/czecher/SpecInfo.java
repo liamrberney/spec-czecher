@@ -176,7 +176,9 @@ public class SpecInfo {
         List<String> temp= new ArrayList<>();
         temp.add("USB Devices:");
         for (UsbDevice usbDevice : usbDevices) {
-            temp.add(usbDevice.toString());
+            String[] a = usbDevice.toString().split("\\|--");
+            for (String b: a)
+                temp.add(b);
         }
         return temp;
     }
