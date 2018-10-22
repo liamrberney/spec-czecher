@@ -65,17 +65,21 @@ public class specCzecherRunner {
      * @throws org.apache.poi.openxml4j.exceptions.InvalidFormatException
      */
     public static void main(String[] args) throws IOException, InvalidFormatException {
-        SpecInfo a=new SpecInfo();
+        /*SpecInfo a=new SpecInfo();
         List<List<String>> specs = SpecInfo.run();
         for(List s : specs) {
             for ( Object str : s){
                 out.println((String) str);
             }
         ExcelWriter b= new ExcelWriter(specs);
-        b.createSheet();
+        b.createSheet();*/
+        TempInfo a = new TempInfo();
+        for (String b : a.getCpuInfo()){
+            out.println(b);
+        }
             
-}
-       
     }
+       
+    
 }
     
