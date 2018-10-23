@@ -20,11 +20,12 @@ import java.util.Date;
 
 public class ExcelWriter {
     
-    public List<List<String>> info;
+    public List<List<String>> HardwareInfo;
+    public List<List<String>> SensorInfo;
     private String[] Headers;
-    public ExcelWriter(List<List<String>> info){
-        this.info=info;
-        Headers= new String[info.size()];
+    public ExcelWriter(List<List<String>> HardwareInfo){
+        this.HardwareInfo=HardwareInfo;
+        Headers= new String[HardwareInfo.size()];
     }
 
     public void createSheet() throws IOException, InvalidFormatException {
@@ -50,15 +51,15 @@ public class ExcelWriter {
 
         // Create cells
         
-        for(int i = 0; i < Headers.length; i++) {
+       /* for(int i = 0; i < Headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(Headers[i]);
             cell.setCellStyle(headerCellStyle);
         }
-
+*/
         // Create Other rows and cells with employees data
-        int rowNum = 1;
-        for(List<String> s: info) {
+        int rowNum = 0;
+        for(List<String> s: HardwareInfo) {
             Row row = sheet.createRow(rowNum++);
                 for (int x=0; x<s.size(); x++)
                     row.createCell(x).setCellValue(s.get(x));

@@ -21,9 +21,24 @@ public class TempInfo {
     public List<String> CpuInfo;
     public List<String> DiskInfo;
     
+    public static List<List<String>> run(){
+        List<List<String>> a = new ArrayList<>();
+        List<String> d= new ArrayList<>();
+        d.add(" ");
+        TempInfo b= new TempInfo();
+        a.add(d);
+        a.add(b.getCpuInfo());
+        a.add(b.getGpuInfo());
+        a.add(b.getDiskInfo());
+        return a;
+    }
     public TempInfo(){
         CpuInfo= new ArrayList<>();
         setCpuInfo();
+        GpuInfo= new ArrayList<>();
+        setGpuInfo();
+        DiskInfo= new ArrayList<>();
+        setDiskInfo();
     
     }
     public List<String> getCpuInfo(){
@@ -43,44 +58,55 @@ public class TempInfo {
         if (cpus != null) {
             for (final Cpu cpu : cpus) {
                 if (cpu.sensors != null) {
-                    readComponent(cpu);             
+                    CpuInfo=readComponent(cpu);             
                 }
             }
         }
+        CpuInfo.add(0,"Cpu Info:");
+    }
+    private void setGpuInfo() {
+        Components components = JSensors.get.components();
         List<Gpu> gpus = components.gpus;
         if (gpus != null) {
             for (final Gpu gpu : gpus) {
                 if (gpu.sensors != null) {
-                    readComponent(gpu);             
+                    GpuInfo=readComponent(gpu);             
                 }
             }
         }
+        GpuInfo.add(0,"Gpu Info:");
+    }
+    private void setDiskInfo() {
+        Components components = JSensors.get.components();
         List<Disk> disks = components.disks;
         if (disks != null) {
             for (final Disk disk : disks) {
                 if (disk.sensors != null) {
-                    readComponent(disk);             
+                    DiskInfo=readComponent(disk);             
                 }
             }
         }
+        DiskInfo.add(0,"Disk Info:");
     }
-    private static void readComponent(Component component) {
+    private static List<String> readComponent(Component component) {
+                List<String> a= new ArrayList<>();
 		if (component.sensors != null) {
 
 			List<Temperature> temps = component.sensors.temperatures;
 			for (final Temperature temp : temps) {
-				System.out.println(temp.name + ": " + temp.value + " C");
+				a.add(temp.name + ": " + temp.value + " C");
 			}
 
 			List<Fan> fans = component.sensors.fans;
 			for (final Fan fan : fans) {
-				System.out.println(fan.name + ": " + fan.value + " RPM");
+				a.add(fan.name + ": " + fan.value + " RPM");
 			}
 
 			List<Load> loads = component.sensors.loads;
 			for (final Load load : loads) {
-				System.out.println(load.name + ": " + load.value);
+				a.add(load.name + ": " + load.value);
 			}
 		}
+                return a;
 	}
 }

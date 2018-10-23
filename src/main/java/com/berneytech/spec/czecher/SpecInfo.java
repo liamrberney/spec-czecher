@@ -81,7 +81,7 @@ public class SpecInfo {
         temp.add("Disks:");
         for (HWDiskStore disk : diskStores) {
             boolean readwrite = disk.getReads() > 0 || disk.getWrites() > 0;
-           temp.add(String.format(" %s: (model: %s - S/N: %s) size: %s, reads: %s (%s), writes: %s (%s), xfer: %s ms%n",
+           temp.add(String.format(" %s: (model: %s - S/N: %s) size: %s",
                     disk.getName(), disk.getModel(), disk.getSerial(),
                     disk.getSize() > 0 ? FormatUtil.formatBytesDecimal(disk.getSize()) : "?",
                     readwrite ? disk.getReads() : "?", readwrite ? FormatUtil.formatBytes(disk.getReadBytes()) : "?",
@@ -115,9 +115,9 @@ public class SpecInfo {
             long usable = fs.getUsableSpace();
             long total = fs.getTotalSpace();
             temp.add(String.format(
-                    " %s (%s) [%s] %s of %s free (%.1f%%) is %s "
-                            + (fs.getLogicalVolume() != null && fs.getLogicalVolume().length() > 0 ? "[%s]" : "%s")
-                            + " and is mounted at %s%n",
+                    " %s (%s) [%s] %s of %s free (%.1f%%)"
+                            + (fs.getLogicalVolume() != null && fs.getLogicalVolume().length() > 0 ? "" : "")
+                            + ": %s%n",
                     fs.getName(), fs.getDescription().isEmpty() ? "file system" : fs.getDescription(), fs.getType(),
                     FormatUtil.formatBytes(usable), FormatUtil.formatBytes(fs.getTotalSpace()), 100d * usable / total,
                     fs.getVolume(), fs.getLogicalVolume(), fs.getMount()));
@@ -198,6 +198,7 @@ public class SpecInfo {
         OperatingSystem os = si.getOperatingSystem();
         
         List<String> Temp= new ArrayList<>();
+        Temp.add("Operating System");
         Temp.add(os.toString());
         specs.add(Temp);
         
@@ -220,8 +221,8 @@ public class SpecInfo {
         LOG.info("Checking File System...");
         specs.add(printFileSystem(os.getFileSystem()));
 
-        LOG.info("Checking Network interfaces...");
-        specs.add(printNetworkInterfaces(hal.getNetworkIFs()));
+       // LOG.info("Checking Network interfaces...");
+       // specs.add(printNetworkInterfaces(hal.getNetworkIFs()));
 
         LOG.info("Checking Network parameterss...");
         specs.add(printNetworkParameters(os.getNetworkParams()));
