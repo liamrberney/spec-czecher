@@ -8,7 +8,6 @@ package com.berneytech.spec.czecher;
 import com.profesorfalken.jsensors.*;
 import com.profesorfalken.jsensors.model.components.*;
 import com.profesorfalken.jsensors.model.sensors.*;
-import static java.lang.System.out;
 import java.util.ArrayList;
 import java.util.List;
 
