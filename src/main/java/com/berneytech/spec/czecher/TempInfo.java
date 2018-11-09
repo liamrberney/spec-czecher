@@ -87,7 +87,7 @@ public class TempInfo {
         }
         DiskInfo.add(0,"Disk Info:");
     }
-    private static List<String> readComponent(Component component) {
+    private static List<String> read​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​Component(Component component) {
                 List<String> a= new ArrayList<>();
 		if (component.sensors != null) {
 
