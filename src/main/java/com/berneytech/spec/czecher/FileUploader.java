@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.berneytech.spec.czecher;
 
 import java.io.File;
@@ -20,7 +15,7 @@ import org.apache.http.impl.client.HttpClients;
 
 /**
  *
- * @author bernelia000
+ * @author liamrberney
  */
 public class FileUploader {
      public static void upload(String a) throws UnsupportedEncodingException, IOException{
@@ -30,10 +25,6 @@ public class FileUploader {
         FileEntity entity = new FileEntity(c, 
         ContentType.create("multipart/form-data", "UTF-8"));        
 
-        // Request parameters and other properties.
-        // List<NameValuePair> params = new ArrayList<NameValuePair>(2);
-        //params.add(new BasicNameValuePair("param-1", "12345"));
-        // params.add(new BasicNameValuePair("param-2", "Hello!"));
         httppost.setEntity(entity);
 
         //Execute and get the response.

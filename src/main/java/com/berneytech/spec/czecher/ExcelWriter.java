@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.berneytech.spec.czecher;
-
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -13,6 +7,10 @@ import java.util.List;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import java.io.IOException;
 
+/**
+ *
+ * @author liamrberney
+ */
 public class ExcelWriter {
     
     public List<List<String>> HardwareInfo;
@@ -44,15 +42,7 @@ public class ExcelWriter {
         // Create a Row
         Row headerRow = sheet.createRow(0);
 
-        // Create cells
-        
-       /* for(int i = 0; i < Headers.length; i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(Headers[i]);
-            cell.setCellStyle(headerCellStyle);
-        }
-*/
-        // Create Other rows and cells with employees data
+        // Create Other rows and cells
         int rowNum = 0;
         for(List<String> s: HardwareInfo) {
             Row row = sheet.createRow(rowNum++);

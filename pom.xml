@@ -45,7 +45,6 @@
     <build>
 	<plugins>
             <plugin>
-                <version>1.0</version>
 		<groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
 		<configuration>
