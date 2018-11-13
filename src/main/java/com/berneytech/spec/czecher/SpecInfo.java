@@ -200,7 +200,6 @@ public class SpecInfo {
         Temp.add("Operating System");
         Temp.add(os.toString());
         specs.add(Temp);
-        
 
         LOG.info("Checking computer system...");
         specs.add(printComputerSystem(hal.getComputerSystem()));

@@ -1,12 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.berneytech.spec.czecher;
-
-import java.awt.Desktop;
-import java.io.File;
 
 import java.io.IOException;
 import java.util.List;
@@ -34,21 +26,19 @@ public class specCzecherRunner {
  *
  * Contributors:
  * https://github.com/oshi/oshi/graphs/contributors
+     * @param args
+     * @throws java.io.IOException
+     * @throws org.apache.poi.openxml4j.exceptions.InvalidFormatException
  */
     public static void main(String[] args) throws IOException, InvalidFormatException {
         run();
     }
     public static void run() throws IOException, InvalidFormatException{
-        SpecInfo a=new SpecInfo();
         List<List<String>> specs = SpecInfo.run();
-        TempInfo c = new TempInfo();
-        List<List<String>> sensors = TempInfo.run();
-        for (List<String> d: sensors){
+        for (List<String> d: TempInfo.run()){
             specs.add(d);
         }
-        ExcelWriter b= new ExcelWriter(specs);
-        b.createSheet();
-        
+        new ExcelWriter(specs){{createSheet();}};
         FileUploader.upload("poi-generated-file.xlsx");
     }
 }   
