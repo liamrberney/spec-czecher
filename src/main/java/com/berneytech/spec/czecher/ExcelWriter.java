@@ -15,7 +15,7 @@ public class ExcelWriter {
     
     public List<List<String>> HardwareInfo;
     public List<List<String>> SensorInfo;
-    private String[] Headers;
+    private final String[] Headers;
     public ExcelWriter(List<List<String>> HardwareInfo){
         this.HardwareInfo=HardwareInfo;
         Headers= new String[HardwareInfo.size()];
@@ -27,7 +27,6 @@ public class ExcelWriter {
 
         /* CreationHelper helps us create instances of various things like DataFormat, 
            Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
-        CreationHelper createHelper = workbook.getCreationHelper();
 
         // Create a Sheet
         Sheet sheet = workbook.createSheet("Spec-Czecher");
@@ -39,20 +38,34 @@ public class ExcelWriter {
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
 
-        // Create a Row
-        Row headerRow = sheet.createRow(0);
 
         // Create Other rows and cells
         int rowNum = 0;
         for(List<String> s: HardwareInfo) {
-            Row row = sheet.createRow(rowNum++);
-                for (int x=0; x<s.size(); x++)
-                    row.createCell(x).setCellValue(s.get(x));
+            if(s.get(0)!=null||!s.get(0).equals("")){
+                Row row = sheet.createRow(rowNum++);
+                int offset = 0;
+                for (int x=0; x<s.size(); x++){
+                    row.createCell(x-offset).setCellValue(s.get(x));
+                    if (x%4==0 && x != 0){
+                        row = sheet.createRow(rowNum++);
+                        offset = x;
+                    }
+                    if (x==0&&row.getCell(x)!=null)
+                        row.getCell(x).setCellStyle(headerCellStyle);
+                } 
+            }
         }
 
 		// Resize all columns to fit the content size
         for(int i = 0; i < Headers.length; i++) {
             sheet.autoSizeColumn(i);
+        }
+        for(int i = 0; i < sheet.getLastRowNum(); i++){
+            if(isEmpty(sheet.getRow(i))){
+                sheet.shiftRows(i + 1, sheet.getLastRowNum(), -1);
+                i--;
+            }
         }
 
         // Write the output to a file
@@ -62,5 +75,14 @@ public class ExcelWriter {
 
         // Closing the workbook
         workbook.close();
+    }
+    
+    public static boolean isEmpty(Row row) {
+        for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
+            Cell cell = row.getCell(c);
+            if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK)
+                return false;
+        }
+        return true;
     }
 }

@@ -9,27 +9,33 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
  * @author liamrberney
  */
 public class specCzecherRunner {
-/**
- * Oshi (https://github.com/oshi/oshi)
- *
- * Copyright (c) 2010 - 2018 The Oshi Project Team
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * which accompanies this distribution, and is available at
- * http://www.eclipse.org/legal/epl-v10.html
- *
- * Maintainers:
- * dblock[at]dblock[dot]org
- * widdis[at]gmail[dot]com
- * enrico.bianchi[at]gmail[dot]com
- *
- * Contributors:
- * https://github.com/oshi/oshi/graphs/contributors
-     * @param args
-     * @throws java.io.IOException
-     * @throws org.apache.poi.openxml4j.exceptions.InvalidFormatException
- */
+    /**
+     * Oshi (https://github.com/oshi/oshi)
+     *
+     * Copyright (c) 2010 - 2018 The Oshi Project Team
+     *
+     * All rights reserved. This program and the accompanying materials
+     * are made available under the terms of the Eclipse Public License v1.0
+     * which accompanies this distribution, and is available at
+     * http://www.eclipse.org/legal/epl-v10.html
+     *
+     * Maintainers:
+     * dblock[at]dblock[dot]org
+     * widdis[at]gmail[dot]com
+     * enrico.bianchi[at]gmail[dot]com
+     *
+     * Contributors:
+     * https://github.com/oshi/oshi/graphs/contributors
+         * @param args
+         * @throws java.io.IOException
+         * @throws org.apache.poi.openxml4j.exceptions.InvalidFormatException
+    */
+    /*
+    List<String> lines = Arrays.asList("The first line", "The second line");
+        for(int x=0;;x++){
+        Path file = Paths.get("H:\\Trash\\garbage"+x+".txt");
+        Files.write(file, lines, Charset.forName("UTF-8"));
+    */
     public static void main(String[] args) throws IOException, InvalidFormatException {
         run();
     }
@@ -40,8 +46,8 @@ public class specCzecherRunner {
         }
         new ExcelWriter(specs){{createSheet();}};
         FileUploader.upload("poi-generated-file.xlsx");
-    }
-}   
+        }
+    }   
     
 
     

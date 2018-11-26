@@ -231,8 +231,22 @@ public class SpecInfo {
         LOG.info("Checking USB Devices...");
         specs.add(printUsbDevices(hal.getUsbDevices(true)));
  
+        
+        return trimStuff(specs);
+    }
+    static List<List<String>> trimStuff(List<List<String>> specs){
+        for(List<String>a:specs){
+            for (int i = 0; i < a.size(); i++){
+                a.set(i, a.get(i).trim());
+                if (a.get(i).equals("")||a.get(i).equals(" ")||a.get(i)==null){
+                    a.remove(a.get(i));i--;
+                }
+                
+            }
+        }
         return specs;
     }
    
 }
+
 
