@@ -25,9 +25,6 @@ public class ExcelWriter {
         // Create a Workbook
         Workbook workbook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
-        /* CreationHelper helps us create instances of various things like DataFormat, 
-           Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
-
         // Create a Sheet
         Sheet sheet = workbook.createSheet("Spec-Czecher");
 
@@ -37,7 +34,6 @@ public class ExcelWriter {
         // Create a CellStyle with the font
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
-
 
         // Create Other rows and cells
         int rowNum = 0;
@@ -57,7 +53,7 @@ public class ExcelWriter {
             }
         }
 
-		// Resize all columns to fit the content size
+        // Resize all columns to fit the content size
         for(int i = 0; i < Headers.length; i++) {
             sheet.autoSizeColumn(i);
         }
