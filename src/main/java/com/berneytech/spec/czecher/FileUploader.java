@@ -24,7 +24,6 @@ public class FileUploader {
         File c = new File(a);
         FileEntity entity = new FileEntity(c, 
         ContentType.create("multipart/form-data", "UTF-8"));        
-
         httppost.setEntity(entity);
 
         //Execute and get the response.

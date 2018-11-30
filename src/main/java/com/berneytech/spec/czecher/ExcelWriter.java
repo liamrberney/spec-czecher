@@ -65,7 +65,7 @@ public class ExcelWriter {
         }
 
         // Write the output to a file
-        FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
+        FileOutputStream fileOut = new FileOutputStream("poi-generated-file.csv");
         workbook.write(fileOut);
         fileOut.close();
 
