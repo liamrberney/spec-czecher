@@ -14,7 +14,6 @@ import java.io.IOException;
 public class ExcelWriter {
     
     public List<List<String>> HardwareInfo;
-    public List<List<String>> SensorInfo;
     private final String[] Headers;
     public ExcelWriter(List<List<String>> HardwareInfo){
         this.HardwareInfo=HardwareInfo;
@@ -34,8 +33,11 @@ public class ExcelWriter {
         // Create a CellStyle with the font
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
-
-        // Create Other rows and cells
+        
+        CellStyle style = workbook.createCellStyle();
+        style.setFillBackgroundColor(IndexedColors.AQUA.getIndex());
+        style.setFillPattern(FillPatternType.BIG_SPOTS);
+        // Create Other rows and cells 
         int rowNum = 0;
         for(List<String> s: HardwareInfo) {
             if(s.get(0)!=null||!s.get(0).equals("")){
@@ -63,9 +65,13 @@ public class ExcelWriter {
                 i--;
             }
         }
+        for(int i=0 ;i<sheet.getLastRowNum();i++){
+            if (i%2==0)
+                sheet.getRow(i).setRowStyle(style);
+        }
 
         // Write the output to a file
-        FileOutputStream fileOut = new FileOutputStream("poi-generated-file.csv");
+        FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
         workbook.write(fileOut);
         fileOut.close();
 

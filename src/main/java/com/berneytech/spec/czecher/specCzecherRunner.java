@@ -1,7 +1,11 @@
 package com.berneytech.spec.czecher;
 
+import java.awt.FlowLayout;
+import java.awt.event.*;
 import java.io.IOException;
-import java.util.List;
+import static java.lang.System.out;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
@@ -40,12 +44,26 @@ public class specCzecherRunner {
         run();
     }
     public static void run() throws IOException, InvalidFormatException{
-        List<List<String>> specs = SpecInfo.run();
-        for (List<String> d: TempInfo.run()){
-            specs.add(d);
+        //List<List<String>> specs = SpecInfo.run();
+       // for (List<String> d: TempInfo.run()){
+        //    specs.add(d);
+        //}
+        //new ExcelWriter(specs){{createSheet();}};
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                login();
+            }
+        });
         }
-        new ExcelWriter(specs){{createSheet();}};
-        FileUploader.upload("poi-generated-file.xlsx");
+    public static void login(){
+        final JFrame frame = new JFrame("JDialog Demo");
+        LoginDialog loginDlg = new LoginDialog(frame,"poi-generated-file.xlsx");
+        loginDlg.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 100);
+        frame.setLayout(new FlowLayout());
+        frame.setVisible(true);
+        frame.dispose();
         }
     }   
     

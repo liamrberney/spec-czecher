@@ -18,14 +18,13 @@ import org.apache.http.impl.client.HttpClients;
  * @author liamrberney
  */
 public class FileUploader {
-     public static void upload(String a) throws UnsupportedEncodingException, IOException{
+     public static boolean upload(String a,String User, String pass) throws UnsupportedEncodingException, IOException{
         HttpClient httpclient = HttpClients.createDefault();
-        HttpPost httppost = new HttpPost("http://www.berney.tech");
+        HttpPost httppost = new HttpPost("https://api.berney.tech/api/auth/upload-specs");
         File c = new File(a);
         FileEntity entity = new FileEntity(c, 
         ContentType.create("multipart/form-data", "UTF-8"));        
         httppost.setEntity(entity);
-
         //Execute and get the response.
         HttpResponse response = httpclient.execute(httppost);
         HttpEntity yeet = response.getEntity();
@@ -35,6 +34,8 @@ public class FileUploader {
                 // do something useful
             }
         }
+     //return response=good
+     return true;
     }
 }   
 
