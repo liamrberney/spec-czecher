@@ -40,8 +40,7 @@ package com.berneytech.spec.czecher;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.logging.*;
 import javax.swing.*;
 
 import javax.swing.border.*;
@@ -108,6 +107,8 @@ public class LoginDialog extends JDialog {
                         tfUsername.setText("");
                         pfPassword.setText("");
                         succeeded = false;
+                        LoginDialog a= new LoginDialog(parent,filename);
+        
                         
                     }
                 } catch (IOException ex) {
@@ -119,7 +120,7 @@ public class LoginDialog extends JDialog {
         btnCancel.addActionListener(new ActionListener() {
  
             public void actionPerformed(ActionEvent e) {
-                dispose();
+                
             }
         });
         JPanel bp = new JPanel();

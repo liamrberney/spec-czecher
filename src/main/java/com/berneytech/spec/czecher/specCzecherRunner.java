@@ -1,11 +1,8 @@
 package com.berneytech.spec.czecher;
 
 import java.awt.FlowLayout;
-import java.awt.event.*;
 import java.io.IOException;
-import static java.lang.System.out;
 import java.util.List;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
@@ -45,11 +42,11 @@ public class specCzecherRunner {
         run();
     }
     public static void run() throws IOException, InvalidFormatException{
-        List<List<String>> specs = SpecInfo.run();
+      /*  List<List<String>> specs = SpecInfo.run();
         for (List<String> d: TempInfo.run()){
             specs.add(d);
         }
-        new ExcelWriter(specs){{createSheet();}};
+        new ExcelWriter(specs){{createSheet();}};*/
         javax.swing.SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 login();

@@ -3,8 +3,10 @@ package com.berneytech.spec.czecher;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import static java.lang.System.out;
 import org.apache.http.*;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.*;
@@ -37,21 +39,28 @@ public class FileUploader {
             }
         }*/
      //return response=good
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost("https://api.berney.tech/api/auth/upload-specs");
+    HttpClient httpclient = new DefaultHttpClient();
+    HttpPost httppost = new HttpPost("https://api.berney.tech/api/auth/upload-specs");
+    FileBody bin = new FileBody(new File(a));
+    StringBody username = new StringBody(User);
+    StringBody password = new StringBody(pass);
 
-        FileBody bin = new FileBody(new File(a));
-        StringBody username = new StringBody(User);
-        StringBody password = new StringBody(pass);
+    MultipartEntity reqEntity = new MultipartEntity();
+    reqEntity.addPart("file", bin);
+    reqEntity.addPart("email", username);
+    reqEntity.addPart("password", password);
+    httppost.setEntity(reqEntity);
 
-        MultipartEntity reqEntity = new MultipartEntity();
-        reqEntity.addPart("File", bin);
-        reqEntity.addPart("Username", username);
-        reqEntity.addPart("Password", password);
-        httppost.setEntity(reqEntity);
-
-        HttpResponse response = httpclient.execute(httppost);
-        HttpEntity resEntity = response.getEntity();
+    HttpResponse response = httpclient.execute(httppost);
+    HttpEntity resEntity = response.getEntity();
+    byte[] buffer = new byte[346729356];
+    int len = resEntity.getContent().read(buffer);
+    System.out.println("len = " + len);
+    System.out.write(buffer, 0, len);
+    String string = new String(java.util.Arrays.copyOfRange(buffer, 0, len), "UTF-8");
+    if (string.equals("[\"user doesn't exist\"]")){
+        return false;
+    }
     return true;
     }
 }   
