@@ -34,9 +34,6 @@ public class ExcelWriter {
         CellStyle headerCellStyle = workbook.createCellStyle();
         headerCellStyle.setFont(headerFont);
         
-        CellStyle style = workbook.createCellStyle();
-        style.setFillBackgroundColor(IndexedColors.AQUA.getIndex());
-        style.setFillPattern(FillPatternType.BIG_SPOTS);
         // Create Other rows and cells 
         int rowNum = 0;
         for(List<String> s: HardwareInfo) {
@@ -65,10 +62,7 @@ public class ExcelWriter {
                 i--;
             }
         }
-        for(int i=0 ;i<sheet.getLastRowNum();i++){
-            if (i%2==0)
-                sheet.getRow(i).setRowStyle(style);
-        }
+       
 
         // Write the output to a file
         FileOutputStream fileOut = new FileOutputStream("poi-generated-file.xlsx");
