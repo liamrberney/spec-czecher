@@ -54,6 +54,7 @@ public class LoginDialog extends JDialog {
     private JButton btnLogin;
     private JButton btnCancel;
     private boolean succeeded;
+   
  
     public LoginDialog(Frame parent,String filename) {
         super(parent, "Login", true);
@@ -96,8 +97,10 @@ public class LoginDialog extends JDialog {
                 dispose();
                 try {
                     if (FileUploader.upload(filename,getUsername(),getPassword())) {
-                        succeeded = true;
                         dispose();
+                        dispose();
+                        dispose();
+                        succeeded = true;
                     } else {
                         JOptionPane.showMessageDialog(LoginDialog.this,
                                 "Invalid username or password",
@@ -107,7 +110,8 @@ public class LoginDialog extends JDialog {
                         tfUsername.setText("");
                         pfPassword.setText("");
                         succeeded = false;
-                        LoginDialog a= new LoginDialog(parent,filename);
+                        login();
+                        dispose();
         
                         
                     }
@@ -133,6 +137,7 @@ public class LoginDialog extends JDialog {
         pack();
         setResizable(false);
         setLocationRelativeTo(parent);
+        dispose();
     }
  
     public String getUsername() {
@@ -146,5 +151,16 @@ public class LoginDialog extends JDialog {
     public boolean isSucceeded() {
         return succeeded;
     }
+    public static void login(){
+        final JFrame frame = new JFrame("JDialog Demo");
+        LoginDialog loginDlg = new LoginDialog(frame,"poi-generated-file.xlsx");
+        loginDlg.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(300, 100);
+        frame.setLayout(new FlowLayout());
+        frame.setVisible(true);
+        frame.dispose();
+        
+    }  
 }
     

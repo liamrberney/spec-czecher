@@ -42,28 +42,19 @@ public class specCzecherRunner {
         run();
     }
     public static void run() throws IOException, InvalidFormatException{
-      /*  List<List<String>> specs = SpecInfo.run();
+        List<List<String>> specs = SpecInfo.run();
         for (List<String> d: TempInfo.run()){
             specs.add(d);
+            new ExcelWriter(specs){{createSheet();}};
         }
-        new ExcelWriter(specs){{createSheet();}};*/
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                login();
-            }
-        });
-        }
-    public static void login(){
-        final JFrame frame = new JFrame("JDialog Demo");
-        LoginDialog loginDlg = new LoginDialog(frame,"poi-generated-file.xlsx");
-        loginDlg.setVisible(true);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300, 100);
-        frame.setLayout(new FlowLayout());
-        frame.setVisible(true);
-        frame.dispose();
-        }
-    }   
+            javax.swing.SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    LoginDialog.login();
+                }
+            });
+    }
+}
+
     
 
     
